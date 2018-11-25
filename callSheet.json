@@ -1,0 +1,73 @@
+{
+	"Start-Date" : "2018.07.02",
+	"End-Date"   : "2018.07.31",
+	"Doctors"    : [
+	{
+		"Name"  		: "Alice",
+		"Year"  		: 1,
+		"Available"     : [
+		{
+		 	"Start-Date": "2018.07.01",
+		 	"End-Date"  : "2018.07.31"
+		}],
+		"Unavailable" 	: [
+		{
+			"Start-Date": "2018.07.01",
+			"End-Date"  : "2018.07.01"
+		},
+		{
+			"Start-Date": "2018.07.10",
+			"End-Date"  : "2018.07.10"
+		} ]
+	},
+	{
+		"Name"  		: "Bob",
+		"Year"  		: 2,
+		"Available"     : [
+		{
+		 	"Start-Date": "2018.07.01",
+		 	"End-Date"  : "2018.07.31"
+		}] ,
+		"Unavailable" 	: ""
+	},
+	{
+		"Name"  		: "Charlie",
+		"Year"  		: 3,
+		"Available"     : [
+		{
+		 	"Start-Date": "2018.07.01",
+		 	"End-Date"  : "2018.07.31"
+		}] ,
+		"Unavailable" 	: ""
+	},
+	{
+		"Name"  		: "Daniel",
+		"Year"  		: 4,
+		"Available"     : [
+		{
+		 	"Start-Date": "2018.07.01",
+		 	"End-Date"  : "2018.07.31"
+		}] ,
+		"Unavailable" 	: ""
+	}, 
+	{
+		"Name"  		: "Ewina",
+		"Year"  		: 5,
+		"Available"     : [
+		{
+		 	"Start-Date": "2018.07.01",
+		 	"End-Date"  : "2018.07.31"
+		}] ,
+		"Unavailable" 	: ""
+	},
+	{
+		"Name"  		: "Fiona",
+		"Year"  		: 6,
+		"Available"     : [
+		{
+		 	"Start-Date": "2018.07.01",
+		 	"End-Date"  : "2018.07.31"
+		}] ,
+		"Unavailable" 	: ""
+	} ]
+}
