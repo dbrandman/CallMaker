@@ -18,6 +18,6 @@ My approach was to bootstrap call schedules. The algorithm works as follows:
 4. Report the schedule with the lowest strain score
 
 Dependencies:
-    1. `tqdm` : used for making the progress bar pretty
+1. `tqdm` : used for making the progress bar pretty
 
 Most of the code should be pretty self explanatory. Enjoy!
