@@ -53,13 +53,16 @@ class CalendarRules:
         if len(callSchedule.onCall) == 0:
             return 0
 
+        # Who are the doctors on call?
         names = [n.name for n in callSchedule.onCall]
-
         tabulatedList = Counter(names)
+
+        # How many times are the doctors on call?
         nCalls = [n for _,n in tabulatedList.items()]
 
+        # Are any doctors on call more than they should be?
         for ii in nCalls:
-           if ii > 70:
+           if ii > 7:
                return 1
 
         return 0
@@ -97,35 +100,19 @@ class CalendarRules:
         onCallSunday   = [callSchedule.onCall[d] for d in sundayCallDays]
 
 
+        # Are you on call this saturday, and next sat/sunday?
         for ii in range(len(onCallSaturday)-1):
             if onCallSaturday[ii] == onCallSaturday[ ii+1 ]:
                 return 1
             if ii+1 < len(onCallSunday) and onCallSaturday[ ii ] == onCallSunday[ ii+1 ]:
                 return 1
 
+        # Are you on call this sunday, and next sat/sunday?
         for ii in range(len(onCallSunday)-1):
             if onCallSunday[ ii ] == onCallSunday[ ii+1 ]:
                 return 1
             if ii+1 < len(onCallSaturday) and onCallSunday[ ii ] == onCallSaturday[ ii+1 ]:
                 return 1
-
-
-        
-
-        # weekendDays = saturdayCallDays + sundayCallDays
-
-        # for ii in weekendDays:
-        #     for jj in weekendDays:
-        #         if ii != jj and callSchedule.onCall[ii] is not None and callSchedule.onCall[jj] is not None:
-        #             if callSchedule.onCall[ii] == callSchedule.onCall[jj]:
-        #                 return 1
-
-
-#         for sat in saturdayCallDays:
-#             for sun in sundayCallDays:
-#                 if callSchedule.onCall[sat] is not None and callSchedule.onCall[sun] is not None:
-#                     if callSchedule.onCall[sat] == callSchedule.onCall[sun]:
-#                         return 1
 
         return 0 
 
@@ -139,7 +126,7 @@ class CalendarScore:
 
     @staticmethod
     def ScoreSumOfPGY(callSchedule):
-        x = [d.year*2 for d in callSchedule.onCall]
+        x = [d.year for d in callSchedule.onCall]
         return sum(x)
 
     # Score: Compute a score that tries to space out resident calls.
@@ -254,8 +241,13 @@ class CallSchedule:
 
 
 
-
-    # See the preface notes for explanation of what's happening here
+    """
+        This wors as follows:
+        1. For each date within the calendar, get the list of doctors that can be on call
+        2. Randomly assign a doctor on call for each date
+        3. Now that the calendar is full, is it legal? If no, start again
+        4. If yes, then compute the score. Keep the bootstrapped schedule with the lowest score
+    """
 
     def BootstrapCallSchedule(self):
 
@@ -286,36 +278,38 @@ class CallSchedule:
 
 
 
+    # This is legacy code. My first approach went through and went through every legal combination
+    # This turned out to be a terrible idea beyond 10-12 days worth of possibilities...
 
-    def CreateCallSchedule(self):
+#    def CreateCallSchedule(self):
 
-        localScope = {'lowestScore': float('inf'), 'bestCalendar': None}
+#        localScope = {'lowestScore': float('inf'), 'bestCalendar': None}
 
-        def ScheduleTree(self):
+#        def ScheduleTree(self):
 
-            dayToAssign, dayIndex = self.GetNextUnassignedCallDay()
-            if dayToAssign is not None:
-                availableDoctors = self.GetDoctorsAvailableOnDate(dayToAssign)
+#            dayToAssign, dayIndex = self.GetNextUnassignedCallDay()
+#            if dayToAssign is not None:
+#                availableDoctors = self.GetDoctorsAvailableOnDate(dayToAssign)
 
-                for currentDoctor in availableDoctors:
-                    self.onCall[dayIndex] = currentDoctor
-                    if self.IsLegal():
-                        ScheduleTree(self)
-                    self.onCall[dayIndex] = None
+#                for currentDoctor in availableDoctors:
+#                    self.onCall[dayIndex] = currentDoctor
+#                    if self.IsLegal():
+#                        ScheduleTree(self)
+#                    self.onCall[dayIndex] = None
 
-            else:
-                myScore = self.ComputeScore() 
-                if myScore < localScope['lowestScore']:
-                    #print "Score: " , myScore , "Lowest: " , localScope['lowestScore'] 
-                    #self.Display()
-                    localScope['lowestScore'] = myScore
-                    localScope['bestCalendar'] = copy.deepcopy(self)
+#            else:
+#                myScore = self.ComputeScore() 
+#                if myScore < localScope['lowestScore']:
+#                    #print "Score: " , myScore , "Lowest: " , localScope['lowestScore'] 
+#                    #self.Display()
+#                    localScope['lowestScore'] = myScore
+#                    localScope['bestCalendar'] = copy.deepcopy(self)
 
-        ScheduleTree(self)
+#        ScheduleTree(self)
 
-        #localScope['bestCalendar'].Display()
-        #print "Lowest: " , localScope['lowestScore'] 
-        return localScope['bestCalendar']
+#        #localScope['bestCalendar'].Display()
+#        #print "Lowest: " , localScope['lowestScore'] 
+#        return localScope['bestCalendar']
 
 
 ###################################################################
@@ -402,7 +396,6 @@ if __name__ == "__main__":
     c = CallSchedule(jsonStructure=data)
 
     t = time.time()
-    # d = c.CreateCallSchedule()
     d = c.BootstrapCallSchedule()
     d.Display()
     print "Elapsed Time: %.2f seconds"  % ( time.time() - t)
